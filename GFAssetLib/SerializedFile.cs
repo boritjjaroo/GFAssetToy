@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using GFAssetLib.Object;
 
@@ -7,18 +8,21 @@ namespace GFAssetLib
 {
     public class SerializedFile
     {
+        string bundlePath;
         string path;
-        public string Path
-        {
-            get => path;
-            set { path = value; }
-        }
         AssetReader reader;
 
         SerializedFileHeader header;
         SerializedFileMetaData metadata;
 
         ObjectBase[] objects;
+        Object.AssetBundle assetBundle;
+
+        public SerializedFile(string path, string bundlePath)
+        {
+            this.path = path;
+            this.bundlePath = bundlePath;
+        }
 
         public void Read(AssetReader reader)
         {
@@ -29,6 +33,7 @@ namespace GFAssetLib
             reader.IsBigEndian = header.IsBigEndian;
             metadata.Read(reader);
 
+            assetBundle = (Object.AssetBundle)ReadObject(metadata.AssetBundleIndex, true);
         }
 
         public int GetObjectCount()
@@ -38,6 +43,11 @@ namespace GFAssetLib
 
         public ObjectBase ReadObject(int index)
         {
+            return ReadObject(index, false);
+        }
+
+        private ObjectBase ReadObject(int index, bool isAssetBundle)
+        {
             if (objects == null)
                 objects = new ObjectBase[metadata.GetObjectCount()];
 
@@ -45,18 +55,37 @@ namespace GFAssetLib
             {
                 reader.Position = header.ObjectDataOffset;
                 reader.SetAlignBasePosition();
-                objects[index] = metadata.ReadObject(index, reader);
+
+                ObjectInfo objectInfo = metadata.GetObjectInfo(index);
+                Type type = metadata.FindType(objectInfo);
+                if (type == null)
+                    return null;
+
+                string containerPath = "";
+                if (!isAssetBundle)
+                {
+                    containerPath = assetBundle.GetContainerPath(objectInfo.ObjectID);
+                }
+
+                ObjectBase obj = ObjectBase.Create(type.ClassID, type.GetTypeVersion(), objectInfo.DataOffset, containerPath);
+                reader.Position += objectInfo.DataOffset;
+                obj.Read(reader);
+                objects[index] = obj;
             }
 
             return objects[index];
         }
 
-        public string ExtractObject(int index, string path)
+        public string ExtractObject(int index, string path = null)
         {
             ObjectBase obj = ReadObject(index);
             if (obj == null)
                 return null;
 
+            if (path == null)
+            {
+                path = $"{Path.GetDirectoryName(bundlePath)}\\";
+            }
             reader.Position = header.ObjectDataOffset;
             reader.SetAlignBasePosition();
             return obj.Extract(reader, path);
@@ -64,7 +93,7 @@ namespace GFAssetLib
 
         public void PrettyPrint(AssetPrettyWriter writer)
         {
-            writer.WriteLine($"AssetFile({path})");
+            writer.WriteLine($"SerializedFile({path})");
             writer.IncreaseDepth();
             header.PrettyPrint(writer);
             metadata.PrettyPrint(writer);

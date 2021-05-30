@@ -8,68 +8,73 @@ namespace GFAssetLib.Object
     {
         protected int version;
         protected long dataOffset;
+        private string containerPath;
+        public string ContainerPath { get => containerPath; }
 
-        public static ObjectBase Create(int classID, int version, long dataOffset)
+        public static int ASSET_BUNDLE = 142;
+
+        public static ObjectBase Create(int classID, int version, long dataOffset, string containerPath)
         {
             switch (classID)
             {
                 case 1:
                     if (version == 3 || version == 5)
-                        return new GameObject(version, dataOffset);
+                        return new GameObject(version, dataOffset, containerPath);
                     break;
                 case 4:
                     if (version == 1)
-                        return new Transform(version, dataOffset);
+                        return new Transform(version, dataOffset, containerPath);
                     break;
                 case 23:
                     if (version == 1)
-                        return new MeshRenderer(version, dataOffset);
+                        return new MeshRenderer(version, dataOffset, containerPath);
                     break;
                 case 28:
                     if (version == 2)
-                        return new Texture2D(version, dataOffset);
+                        return new Texture2D(version, dataOffset, containerPath);
                     break;
                 case 33:
                     if (version == 1)
-                        return new MeshFilter(version, dataOffset);
+                        return new MeshFilter(version, dataOffset, containerPath);
                     break;
                 case 49: // 0x31
                     if (version == 1)
-                        return new TextAsset(version, dataOffset);
+                        return new TextAsset(version, dataOffset, containerPath);
                     break;
                 case 74:
                     if (version == 6)
-                        return new AnimationClip(version, dataOffset);
+                        return new AnimationClip(version, dataOffset, containerPath);
                     break;
                 case 95:
                     if (version == 3)
-                        return new Animator(version, dataOffset);
+                        return new Animator(version, dataOffset, containerPath);
                     break;
                 case 114:
                     if (version == 1)
-                        return new MonoBehaviour(version, dataOffset);
+                        return new MonoBehaviour(version, dataOffset, containerPath);
                     break;
                 case 115:
                     if (version == 4)
-                        return new MonoScript(version, dataOffset);
+                        return new MonoScript(version, dataOffset, containerPath);
                     break;
                 case 142:
                     if (version == 3)
-                        return new AssetBundle(version, dataOffset);
+                        return new AssetBundle(version, dataOffset, containerPath);
                     break;
                 case 213:
                     if (version == 1)
-                        return new Sprite(version, dataOffset);
+                        return new Sprite(version, dataOffset, containerPath);
                     break;
             }
             throw new Exception("Not implemented.");
             //return null;
         }
 
-        public ObjectBase(int version, long dataOffset)
+        public ObjectBase(int version, long dataOffset, string containerPath)
         {
             this.version = version;
             this.dataOffset = dataOffset;
+            this.containerPath = containerPath;
         }
 
         public virtual void Read(AssetReader reader) {}

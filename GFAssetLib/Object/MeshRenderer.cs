@@ -41,7 +41,7 @@ namespace GFAssetLib.Object
 
     public class MeshRenderer : Renderer
     {
-        public MeshRenderer(int version, long dataOffset) : base(version, dataOffset) { }
+        public MeshRenderer(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
         public override string GetTypeName() { return "MeshRenderer"; }
     }
 }

@@ -177,6 +177,19 @@ namespace GFAssetLib
             throw new Exception("Invalid File Format");
         }
 
+        // string [V(1) S(-1) Array(False) 0x00008000]
+        //   Array Array [V(1) S(-1) Array(True) 0x00004001]
+        //     int size [V(1) S(4) Array(False) 0x00000001]
+        //     char data [V(1) S(1) Array(False) 0x00000001]
+        public string ReadString()
+        {
+            int size = ReadInt32();
+            byte[] buf = ReadBytes(size);
+            string result = Encoding.UTF8.GetString(buf);
+            MoveToAlignedPosition(4);
+            return result;
+        }
+
         public void Close()
         {
             reader.Close();

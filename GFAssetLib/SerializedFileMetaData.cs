@@ -26,6 +26,10 @@ namespace GFAssetLib
         Int32 numExternalFiles;
         ExternalFile[] externalFiles;
 
+        int assetBundleIndex;
+        public int AssetBundleIndex { get => assetBundleIndex; }
+
+
         public SerializedFileMetaData(int version)
         {
             this.version = version;
@@ -69,6 +73,9 @@ namespace GFAssetLib
 
                 objectInfos[i] = new ObjectInfo(version);
                 objectInfos[i].Read(reader);
+
+                if (FindType(objectInfos[i]).ClassID == ObjectBase.ASSET_BUNDLE)
+                    assetBundleIndex = i;
             }
 
             numAdds = reader.ReadInt32();
@@ -97,22 +104,16 @@ namespace GFAssetLib
             return objectInfos.Length;
         }
 
-        public ObjectBase ReadObject(int index, AssetReader reader)
+        public ObjectInfo GetObjectInfo(int index)
         {
+            if (objectInfos == null)
+                return null;
             if (index < 0 || objectInfos.Length <= index)
                 return null;
-
-            Type type = FindType(objectInfos[index]);
-            if (type == null)
-                return null;
-
-            ObjectBase obj = ObjectBase.Create(type.ClassID, type.GetTypeVersion(), objectInfos[index].DataOffset);
-            reader.Position += objectInfos[index].DataOffset;
-            obj.Read(reader);
-            return obj;
+            return objectInfos[index];
         }
 
-        private Type FindType(ObjectInfo objectInfo)
+        public Type FindType(ObjectInfo objectInfo)
         {
             if (version < 17)
             {

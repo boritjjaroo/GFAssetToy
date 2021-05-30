@@ -31,7 +31,7 @@ namespace GFAssetLib.Object
         string script;
         string pathName;
 
-        public TextAsset(int version, long dataOffset) : base(version, dataOffset) { }
+        public TextAsset(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
         public override string GetTypeName() { return "TextAsset"; }
         public override int GetContentsSize() { return script.Length; }
 
@@ -39,22 +39,22 @@ namespace GFAssetLib.Object
         {
             base.Read(reader);
 
-            int size = reader.ReadInt32();
-            byte[] data = reader.ReadBytes(size);
-            reader.MoveToAlignedPosition(4);
-            this.script = Encoding.UTF8.GetString(data);
+            this.script = reader.ReadString();
 
             if (version <= 1)
                 return;
 
-            size = reader.ReadInt32();
-            data = reader.ReadBytes(size);
-            this.pathName = Encoding.UTF8.GetString(data);
+            this.pathName = reader.ReadString();
         }
 
         public override string Extract(AssetReader reader, string path)
         {
-            string fullPath = $"{path}{GetName()}.txt";
+            string fullPath = $"{path}{ContainerPath}";
+            string directory = Path.GetDirectoryName(fullPath);
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
             FileStream fs = File.Open(fullPath, FileMode.Create);
             StreamWriter writer = new StreamWriter(fs);
             writer.Write(this.script);

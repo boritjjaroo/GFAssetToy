@@ -20,7 +20,7 @@ namespace GFAssetLib.Object
 
     public class MonoBehaviour : Behaviour
     {
-        public MonoBehaviour(int version, long dataOffset) : base(version, dataOffset)
+        public MonoBehaviour(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath)
         {
         }
 

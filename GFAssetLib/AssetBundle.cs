@@ -9,7 +9,7 @@ namespace GFAssetLib
 
     public class AssetBundle
     {
-        private string path;
+        private string bundlePath;
         public AssetBundleHeader header;
         public AssetBundleDataHeader dataHeader;
         public AssetBundleEntry entry;
@@ -18,7 +18,7 @@ namespace GFAssetLib
 
         public void LoadAssetBundle(string path)
         {
-            this.path = path;
+            this.bundlePath = path;
             AssetReader reader = new AssetReader(path);
             this.header = new AssetBundleHeader();
             this.header.Read(reader);
@@ -97,8 +97,7 @@ namespace GFAssetLib
 
             // Do not close reader!!!
             AssetReader reader = new AssetReader(blockData, (long)entry.entries[index].offset);
-            SerializedFile file = new SerializedFile();
-            file.Path = entry.entries[index].path;
+            SerializedFile file = new SerializedFile(entry.entries[index].path, bundlePath);
             file.Read(reader);
 
             return file;
@@ -106,7 +105,7 @@ namespace GFAssetLib
 
         public void PrettyPrint(AssetPrettyWriter writer)
         {
-            writer.WriteLine($"AssetBundle({this.path})");
+            writer.WriteLine($"AssetBundle({this.bundlePath})");
             writer.IncreaseDepth();
             header.PrettyPrint(writer);
             dataHeader.PrettyPrint(writer);

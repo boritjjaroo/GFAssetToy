@@ -6,6 +6,43 @@ namespace GFAssetLib.Object
 {
     // version : 2
     // classID{28}: Texture2D <- Texture <- NamedObject <- EditorExtension <- Object
+
+
+    //Texture2D Base[V(2) S(-1) Array(False) 0x00008000]
+    //  string m_Name[V(1) S(-1) Array(False) 0x00008001]
+    //    Array Array[V(1) S(-1) Array(True) 0x00004001]
+    //      int size[V(1) S(4) Array(False) 0x00000001]
+    //      char data[V(1) S(1) Array(False) 0x00000001]
+    //  int m_ForcedFallbackFormat[V(1) S(4) Array(False) 0x00000000]
+    //  bool m_DownscaleFallback[V(1) S(1) Array(False) 0x00004000]
+    //  int m_Width[V(1) S(4) Array(False) 0x00000010]
+    //  int m_Height[V(1) S(4) Array(False) 0x00000010]
+    //  int m_CompleteImageSize[V(1) S(4) Array(False) 0x00000010]
+    //  int m_TextureFormat[V(1) S(4) Array(False) 0x00000001]
+    //  int m_MipCount[V(1) S(4) Array(False) 0x00000010]
+    //  bool m_IsReadable[V(1) S(1) Array(False) 0x00004000]
+    //  int m_ImageCount[V(1) S(4) Array(False) 0x00000010]
+    //  int m_TextureDimension[V(1) S(4) Array(False) 0x00000001]
+    //  GLTextureSettings m_TextureSettings[V(2) S(24) Array(False) 0x00000000]
+    //    int m_FilterMode[V(1) S(4) Array(False) 0x00000000]
+    //    int m_Aniso[V(1) S(4) Array(False) 0x00000000]
+    //    float m_MipBias[V(1) S(4) Array(False) 0x00000000]
+    //    int m_WrapU[V(1) S(4) Array(False) 0x00000000]
+    //    int m_WrapV[V(1) S(4) Array(False) 0x00000000]
+    //    int m_WrapW[V(1) S(4) Array(False) 0x00000000]
+    //  int m_LightmapFormat[V(1) S(4) Array(False) 0x00000000]
+    //    int m_ColorSpace[V(1) S(4) Array(False) 0x00000000]
+    //  TypelessData image data[V(1) S(-1) Array(True) 0x00004001]
+    //    int size[V(1) S(4) Array(False) 0x00000001]
+    //    UInt8 data[V(1) S(1) Array(False) 0x00000001]
+    //  StreamingInfo m_StreamData[V(1) S(-1) Array(False) 0x00008000]
+    //    unsigned int offset[V(1) S(4) Array(False) 0x00000000]
+    //    unsigned int size[V(1) S(4) Array(False) 0x00000000]
+    //    string path[V(1) S(-1) Array(False) 0x00008000]
+    //      Array Array[V(1) S(-1) Array(True) 0x00004001]
+    //        int size[V(1) S(4) Array(False) 0x00000001]
+    //        char data[V(1) S(1) Array(False) 0x00000001]
+
     //Texture2D Base // ByteOffset{0}, ByteSize{ffffffff}, Index{0}, IsArray{0}, MetaFlag{8000}
     //  string m_Name // ByteOffset{ffffffff}, ByteSize{ffffffff}, Index{1}, IsArray{0}, MetaFlag{8001}
     //    Array Array // ByteOffset{ffffffff}, ByteSize{ffffffff}, Index{2}, IsArray{1}, MetaFlag{4001}
@@ -33,7 +70,7 @@ namespace GFAssetLib.Object
 
     public class Texture2D : Texture
     {
-        public Texture2D(int version, long dataOffset) : base(version, dataOffset) { }
+        public Texture2D(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
         public override string GetTypeName() { return "Texture2D"; }
     }
 }

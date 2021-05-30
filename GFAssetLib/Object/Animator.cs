@@ -24,7 +24,7 @@ namespace GFAssetLib.Object
 
     public class Animator : Behaviour
     {
-        public Animator(int version, long dataOffset) : base(version, dataOffset) { }
+        public Animator(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
         public override string GetTypeName() { return "Animator"; }
     }
 }

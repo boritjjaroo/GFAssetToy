@@ -30,7 +30,7 @@ namespace GFAssetLib.Object
 
     public class MonoScript : NamedObject
     {
-        public MonoScript(int version, long dataOffset) : base(version, dataOffset)
+        public MonoScript(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath)
         {
         }
         public override string GetTypeName() { return "MonoScript"; }

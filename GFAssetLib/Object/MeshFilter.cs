@@ -16,7 +16,7 @@ namespace GFAssetLib.Object
 
     public class MeshFilter : Component
     {
-        public MeshFilter(int version, long dataOffset) : base(version, dataOffset) { }
+        public MeshFilter(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
         public override string GetTypeName() { return "MeshFilter"; }
     }
 }

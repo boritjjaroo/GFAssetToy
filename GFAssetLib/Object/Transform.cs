@@ -34,7 +34,7 @@ namespace GFAssetLib.Object
 
     public class Transform : Component
     {
-        public Transform(int version, long dataOffset) : base(version, dataOffset)
+        public Transform(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath)
         {
         }
         public override string GetTypeName() { return "Transform"; }

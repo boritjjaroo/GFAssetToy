@@ -31,6 +31,7 @@ namespace GFAssetToy
         public string name { get; set; }
         public string type { get; set; }
         public string size { get; set; }
+        public string path { get; set; }
     }
 
     /// <summary>
@@ -76,9 +77,9 @@ namespace GFAssetToy
             assetBundle = new GFAssetLib.AssetBundle();
             try
             {
-                //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\assettexttable.ab");
+                this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\assettexttable.ab");
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgungeneralliu5101.ab");
-                this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgunkp311103.ab");
+                //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgunkp311103.ab");
                 AssetPrettyWriter writer = new AssetPrettyWriter();
                 assetBundle.PrettyPrint(writer);
                 logger.Debug(writer.ToString());
@@ -113,7 +114,7 @@ namespace GFAssetToy
                 return;
 
             AssetObject item = (AssetObject)listViewObjects.SelectedItem;
-            string path = currentSerializedFile.ExtractObject(item.index, "");
+            string path = currentSerializedFile.ExtractObject(item.index);
             MessageBox.Show($"{path} 저장되었습니다.");
         }
 
@@ -129,7 +130,13 @@ namespace GFAssetToy
             {
                 ObjectBase obj = currentSerializedFile.ReadObject(i);
                 //logger.Debug($"Object[0] = {obj.GetName()}");
-                objects.Add(new AssetObject { index = i, name = obj.GetName(), type = obj.GetTypeName(), size = obj.GetContentsSize().ToString("#,##0") });
+                objects.Add(
+                    new AssetObject { 
+                        index = i, name = obj.GetName(), 
+                        type = obj.GetTypeName(), 
+                        size = obj.GetContentsSize().ToString("#,##0"), 
+                        path = obj.ContainerPath 
+                    });
             }
         }
 

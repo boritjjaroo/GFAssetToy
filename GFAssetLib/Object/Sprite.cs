@@ -59,7 +59,7 @@ namespace GFAssetLib.Object
 
     public class Sprite : NamedObject
     {
-        public Sprite(int version, long dataOffset) : base(version, dataOffset) { }
+        public Sprite(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
         public override string GetTypeName() { return "Sprite"; }
     }
 }

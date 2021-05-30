@@ -9,6 +9,7 @@ namespace GFAssetLib
         int version;
 
         Int64 objectID;
+        public Int64 ObjectID { get => objectID; }
         Int32 dataOffset;
         public long DataOffset { get => dataOffset; }
         Int32 dataSize;
