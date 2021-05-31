@@ -132,11 +132,13 @@ namespace GFAssetLib.Object
         }
 
         List<ContainerItem> container;
+        string assetBundleName;
 
         public AssetBundle(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath)
         {
         }
         public override string GetTypeName() { return "AssetBundle"; }
+        public override string GetName() { return assetBundleName; }
 
         public override void Read(AssetReader reader)
         {
@@ -190,21 +192,21 @@ namespace GFAssetLib.Object
 
             //  AssetInfo m_MainAsset[V(1) S(20) Array(False) 0x00000000]
             //    int preloadIndex[V(1) S(4) Array(False) 0x00000000]
-            //reader.ReadInt32();
+            reader.ReadInt32();
             //    int preloadSize[V(1) S(4) Array(False) 0x00000000]
-            //reader.ReadInt32();
+            reader.ReadInt32();
             //    PPtr<Object> asset[V(1) S(12) Array(False) 0x00000000]
             //      int m_FileID[V(1) S(4) Array(False) 0x00800001]
-            //reader.ReadInt32();
+            reader.ReadInt32();
             //      SInt64 m_PathID[V(1) S(8) Array(False) 0x00800001]
-            //reader.ReadInt64();
+            reader.ReadInt64();
             //  unsigned int m_RuntimeCompatibility[V(1) S(4) Array(False) 0x00000000]
-            //reader.ReadUInt32();
+            reader.ReadUInt32();
             //  string m_AssetBundleName[V(1) S(-1) Array(False) 0x00008000]
             //    Array Array[V(1) S(-1) Array(True) 0x00004001]
             //      int size[V(1) S(4) Array(False) 0x00000001]
             //      char data[V(1) S(1) Array(False) 0x00000001]
-            //reader.ReadString();
+            assetBundleName = reader.ReadString();
             //  vector m_Dependencies[V(1) S(-1) Array(False) 0x00008000]
             //    Array Array[V(1) S(-1) Array(True) 0x0000C000]
             //      int size[V(1) S(4) Array(False) 0x00000000]
@@ -232,7 +234,10 @@ namespace GFAssetLib.Object
 
         public string GetContainerPath(Int64 pathID)
         {
-            return container.Find(item => item.pathID == pathID).path;
+            ContainerItem item = container.Find(item => item.pathID == pathID);
+            if (item == null)
+                return "";
+            return item.path;
         }
     }
 }

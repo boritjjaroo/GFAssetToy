@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="K4os.Compression.LZ4" Version="1.2.6" />
+    <PackageReference Include="LZMA-SDK" Version="19.0.0" />
   </ItemGroup>
 
   <ItemGroup>

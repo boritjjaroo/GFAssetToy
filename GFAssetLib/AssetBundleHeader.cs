@@ -10,9 +10,9 @@ namespace GFAssetLib
         private const string SIGNATURE_WEB = "UnityWeb";
         private const string SIGNATURE_RAW = "UnityRaw";
 
-        public const UInt32 COMPRESSION_NONE = 0;
-        public const UInt32 COMPRESSION_LZMA = 1;
-        public const UInt32 COMPRESSION_LZ4 = 3;
+        public const int COMPRESSION_NONE = 0;
+        public const int COMPRESSION_LZMA = 1;
+        public const int COMPRESSION_LZ4 = 3;
 
         private string signature;
         private UInt32 formatVersion;
@@ -95,7 +95,7 @@ namespace GFAssetLib
             writer.WriteLine($"Flags = {this.flags}");
             writer.IncreaseDepth();
             string flags = "(";
-            switch (GetDataHeaderCompressionScheme())
+            switch (GetCompressionScheme())
             {
                 case COMPRESSION_NONE:
                     flags += "Compression : None";
@@ -118,7 +118,7 @@ namespace GFAssetLib
             writer.DecreaseDepth();
         }
 
-        public UInt32 GetDataHeaderCompressionScheme() { return (this.flags & 0x3f); }
+        public int GetCompressionScheme() { return AssetBundle.GetCompressionScheme(this.flags); }
 
         public bool IsDataHeaderAtEndOfFile() { return (flags & 0x80) != 0; }
 

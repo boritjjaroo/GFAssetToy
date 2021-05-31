@@ -77,7 +77,8 @@ namespace GFAssetToy
             assetBundle = new GFAssetLib.AssetBundle();
             try
             {
-                this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\assettexttable.ab");
+                this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\AndroidResConfigData.txt");
+                //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\assettexttable.ab");
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgungeneralliu5101.ab");
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgunkp311103.ab");
                 AssetPrettyWriter writer = new AssetPrettyWriter();

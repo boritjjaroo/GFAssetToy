@@ -8,6 +8,7 @@ namespace GFAssetLib
     public class AssetReader
     {
         private BinaryReader reader;
+        public Stream BaseStream { get => reader.BaseStream; }
         private long length;
         private bool isBigEndian;
         public bool IsBigEndian

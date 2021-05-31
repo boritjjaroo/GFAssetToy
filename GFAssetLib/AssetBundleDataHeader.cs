@@ -11,6 +11,7 @@ namespace GFAssetLib
             public UInt32 size;
             public UInt32 compressedSize;
             public UInt16 flags;
+            public int GetCompressionScheme() { return AssetBundle.GetCompressionScheme(this.flags); }
         }
 
         byte[] blockDataHash;
