@@ -10,7 +10,6 @@ namespace GFAssetLib
         byte unknown1;
         Int16 unknown2;
         byte[] scriptHash;
-        byte[] typeHash;
 
         public TypeV17(int version, bool hasTypeTrees) : base(version, hasTypeTrees) { }
 

@@ -6,7 +6,7 @@ namespace GFAssetLib.Object
 {
     public class Texture : NamedObject
     {
-        public Texture(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
+        public Texture(Type type, ObjectInfo objectInfo, string containerPath) : base(type, objectInfo, containerPath) { }
         public override string GetTypeName() { return "Texture"; }
     }
 }

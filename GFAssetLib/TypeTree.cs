@@ -47,5 +47,8 @@ namespace GFAssetLib
             }
             return "";
         }
+
+        public virtual int GetBaseObjectVersion() { return 0; }
+        public virtual TypeTreeNode[] GetNodes() { return null; }
     }
 }

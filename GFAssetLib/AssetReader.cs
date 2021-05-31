@@ -62,6 +62,11 @@ namespace GFAssetLib
             reader.BaseStream.Position = newPosition;
         }
 
+        public bool ReadBoolean()
+        {
+            return 0 < ReadByte();
+        }
+
         public byte ReadByte()
         {
             return reader.ReadByte();
@@ -148,6 +153,20 @@ namespace GFAssetLib
             else
             {
                 return reader.ReadUInt32();
+            }
+        }
+
+        public float ReadFloat()
+        {
+            if (this.isBigEndian)
+            {
+                byte[] buf = reader.ReadBytes(4);
+                Array.Reverse(buf);
+                return BitConverter.ToSingle(buf, 0);
+            }
+            else
+            {
+                return reader.ReadSingle();
             }
         }
 

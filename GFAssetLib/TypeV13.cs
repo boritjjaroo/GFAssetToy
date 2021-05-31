@@ -8,7 +8,6 @@ namespace GFAssetLib
     public class TypeV13 : Type
     {
         byte[] scriptHash;
-        byte[] typeHash;
 
         public TypeV13(int version, bool hasTypeTrees) : base(version, hasTypeTrees) { }
 

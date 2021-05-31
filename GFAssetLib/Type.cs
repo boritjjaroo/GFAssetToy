@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace GFAssetLib
 {
@@ -12,6 +13,9 @@ namespace GFAssetLib
         protected Int32 classID;
         public int ClassID { get => classID; }
         protected TypeTree typeTree;
+        public TypeTree TypeTree { get => typeTree; }
+        // 13 <= version
+        protected byte[] typeHash;
 
         public static Type Create(int version, bool hasTypeTrees)
         {
@@ -36,6 +40,12 @@ namespace GFAssetLib
 
         public virtual void PrettyPrint(AssetPrettyWriter writer)
         {
+        }
+
+        public bool CheckTypeHash(byte[] hash) { return (typeHash != null) && typeHash.SequenceEqual(hash); }
+        public bool CheckBaseObjectVersion(int version)
+        {
+            return typeTree.GetBaseObjectVersion() == version;
         }
 
         public int GetTypeVersion()

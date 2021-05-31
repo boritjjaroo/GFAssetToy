@@ -95,5 +95,14 @@ namespace GFAssetLib
             }
             return base.GetName(index);
         }
+
+        public override int GetBaseObjectVersion()
+        {
+            if (nodes == null || 0 == nodes.Length || nodes[0] == null)
+                return 0;
+            return nodes[0].Version;
+        }
+
+        public override TypeTreeNode[] GetNodes() { return nodes; }
     }
 }

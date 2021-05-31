@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace GFAssetLib.Object
@@ -30,15 +31,47 @@ namespace GFAssetLib.Object
 
     public class MonoScript : NamedObject
     {
-        public MonoScript(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath)
+        public MonoScript(Type type, ObjectInfo objectInfo, string containerPath) : base(type, objectInfo, containerPath)
         {
         }
         public override string GetTypeName() { return "MonoScript"; }
 
         public override void Read(AssetReader reader)
         {
+            // MonoScript Base[V(4) S(-1) Array(False) 0x00008000]
+
+            // string m_Name[V(1) S(-1) Array(False) 0x00008001]
             base.Read(reader);
 
+            // int m_ExecutionOrder[V(1) S(4) Array(False) 0x00000010]
+            reader.ReadInt32();
+            // Hash128 m_PropertiesHash[V(1) S(16) Array(False) 0x00000010]
+            reader.ReadBytes(16);
+            // string m_ClassName[V(1) S(-1) Array(False) 0x00008010]
+            reader.ReadString();
+            // string m_Namespace[V(1) S(-1) Array(False) 0x00008010]
+            reader.ReadString();
+            // string m_AssemblyName[V(1) S(-1) Array(False) 0x00008010]
+            reader.ReadString();
+            // bool m_IsEditorScript[V(1) S(1) Array(False) 0x00000001]
+            reader.ReadBoolean();
+        }
+
+        public override string Extract(AssetReader reader, string path)
+        {
+            var fullPath = $"{path}{ContainerPath}";
+            var directory = Path.GetDirectoryName(fullPath);
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            var fs = File.Open(fullPath, FileMode.Create);
+            var writer = new AssetPrettyWriter(fs, 4);
+
+            TypeHelper.PrettyPrint(reader, writer, type.TypeTree.GetNodes());
+
+            writer.Close();
+            return fs.Name;
         }
     }
 }

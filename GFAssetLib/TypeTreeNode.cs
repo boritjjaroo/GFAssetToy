@@ -13,9 +13,11 @@ namespace GFAssetLib
         byte depth;
         public int Depth { get => depth; }
         bool isArray;
+        public bool IsArray { get => isArray; }
         Int32 typeNameOffset;
         Int32 fieldNameOffset;
         Int32 size;
+        public int Size { get => size; }
         Int32 index;
         UInt32 flags;
 
@@ -38,7 +40,7 @@ namespace GFAssetLib
 
         public void PrettyPrint(AssetPrettyWriter writer)
         {
-            string buf = $"{typeTree.GetName(typeNameOffset)} {typeTree.GetName(fieldNameOffset)}   [ V({version}) S({size}) Array({isArray}) 0x{flags:X8} ]";
+            string buf = $"{GetTypeName()} {GetFieldName()}   [ V({version}) S({size}) Array({isArray}) 0x{flags:X8} ]";
             writer.WriteLine(buf);
         }
 
@@ -55,5 +57,8 @@ namespace GFAssetLib
         }
 
         public bool IsAligned() { return 0 < (this.flags & 0x4000); }
+
+        public string GetTypeName() { return typeTree.GetName(typeNameOffset); }
+        public string GetFieldName() { return typeTree.GetName(fieldNameOffset); }
     }
 }

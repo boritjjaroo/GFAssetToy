@@ -7,15 +7,25 @@ namespace GFAssetLib
 {
     public class AssetPrettyWriter
     {
-        private StringWriter writer;
+        private MemoryStream memoryStream;
+        private StreamWriter writer;
         private int depth;
         private int tabCount;
 
-        public AssetPrettyWriter()
+        public AssetPrettyWriter(int tab)
         {
-            this.writer = new StringWriter();
+            this.memoryStream = new MemoryStream();
+            this.writer = new StreamWriter(memoryStream);
             this.depth = 0;
-            this.tabCount = 2;
+            this.tabCount = tab;
+        }
+
+        public AssetPrettyWriter(Stream output, int tab)
+        {
+            this.memoryStream = null;
+            this.writer = new StreamWriter(output);
+            this.depth = 0;
+            this.tabCount = tab;
         }
 
         public void WriteLine(string msg)
@@ -36,9 +46,26 @@ namespace GFAssetLib
                 this.depth -= depth;
         }
 
-        public override string ToString()
+        public void Flush()
         {
-            return this.writer.ToString();
+            this.writer.Flush();
+        }
+
+        public void Close()
+        {
+            this.writer.Close();
+        }
+
+        public string GetString()
+        {
+            if (memoryStream != null)
+            {
+                writer.Flush();
+                var buf = memoryStream.ToArray();
+                var str = Encoding.UTF8.GetString(buf);
+                return str;
+            }
+            return "";
         }
     }
 }

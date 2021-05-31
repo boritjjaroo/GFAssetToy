@@ -31,7 +31,7 @@ namespace GFAssetLib.Object
         string script;
         string pathName;
 
-        public TextAsset(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
+        public TextAsset(Type type, ObjectInfo dataOffset, string containerPath) : base(type, dataOffset, containerPath) { }
         public override string GetTypeName() { return "TextAsset"; }
         public override int GetContentsSize() { return script.Length; }
 
@@ -41,7 +41,7 @@ namespace GFAssetLib.Object
 
             this.script = reader.ReadString();
 
-            if (version <= 1)
+            if (type.GetTypeVersion() <= 1)
                 return;
 
             this.pathName = reader.ReadString();

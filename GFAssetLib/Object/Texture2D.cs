@@ -70,7 +70,7 @@ namespace GFAssetLib.Object
 
     public class Texture2D : Texture
     {
-        public Texture2D(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
+        public Texture2D(Type type, ObjectInfo objectInfo, string containerPath) : base(type, objectInfo, containerPath) { }
         public override string GetTypeName() { return "Texture2D"; }
     }
 }

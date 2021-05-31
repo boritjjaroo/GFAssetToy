@@ -6,7 +6,7 @@ namespace GFAssetLib.Object
 {
     public class EditorExtension : ObjectBase
     {
-        public EditorExtension(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
+        public EditorExtension(Type type, ObjectInfo objectInfo, string containerPath) : base(type, objectInfo, containerPath) { }
         public override string GetTypeName() { return "EditorExtension"; }
     }
 }

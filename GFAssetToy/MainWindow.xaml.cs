@@ -81,9 +81,9 @@ namespace GFAssetToy
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\assettexttable.ab");
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgungeneralliu5101.ab");
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgunkp311103.ab");
-                AssetPrettyWriter writer = new AssetPrettyWriter();
+                AssetPrettyWriter writer = new AssetPrettyWriter(2);
                 assetBundle.PrettyPrint(writer);
-                logger.Debug(writer.ToString());
+                logger.Debug(writer.GetString());
 
                 foreach (AssetBundleEntry.EntryInfo entryInfo in assetBundle.entry.entries)
                 {
@@ -122,9 +122,9 @@ namespace GFAssetToy
         private void OpenAssetEntry(int index)
         {
             currentSerializedFile = assetBundle.LoadSerializedFile(index);
-            AssetPrettyWriter writer = new AssetPrettyWriter();
+            AssetPrettyWriter writer = new AssetPrettyWriter(2);
             currentSerializedFile.PrettyPrint(writer);
-            logger.Debug(writer.ToString());
+            logger.Debug(writer.GetString());
 
             int count = currentSerializedFile.GetObjectCount();
             for (int i = 0; i < count; i++)

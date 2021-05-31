@@ -12,7 +12,7 @@ namespace GFAssetLib.Object
     {
         string name;
 
-        public NamedObject(int version, long dataOffset, string containerPath) : base(version, dataOffset, containerPath) { }
+        public NamedObject(Type type, ObjectInfo objectInfo, string containerPath) : base(type, objectInfo, containerPath) { }
         public override string GetTypeName() { return "NamedObject"; }
 
         public override void Read(AssetReader reader)

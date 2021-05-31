@@ -67,7 +67,7 @@ namespace GFAssetLib
                     containerPath = assetBundle.GetContainerPath(objectInfo.ObjectID);
                 }
 
-                ObjectBase obj = ObjectBase.Create(type.ClassID, type.GetTypeVersion(), objectInfo.DataOffset, containerPath);
+                ObjectBase obj = ObjectBase.Create(type, objectInfo, containerPath);
                 reader.Position += objectInfo.DataOffset;
                 obj.Read(reader);
                 objects[index] = obj;
@@ -87,6 +87,7 @@ namespace GFAssetLib
                 path = $"{Path.GetDirectoryName(bundlePath)}\\";
             }
             reader.Position = header.ObjectDataOffset;
+            reader.Position += obj.DataOffset;
             reader.SetAlignBasePosition();
             return obj.Extract(reader, path);
         }
