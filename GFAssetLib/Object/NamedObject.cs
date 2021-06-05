@@ -18,7 +18,7 @@ namespace GFAssetLib.Object
         public override void Read(AssetReader reader)
         {
             base.Read(reader);
-            this.name = reader.ReadString();
+            this.name = reader.ReadTypeString();
         }
         public override string GetName()
         {

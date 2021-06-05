@@ -22,6 +22,23 @@ namespace GFAssetLib.Object
     //  UInt16 m_Tag // ByteOffset{2c}, ByteSize{2}, Index{e}, IsArray{0}, MetaFlag{0}
     //  bool m_IsActive // ByteOffset{2e}, ByteSize{1}, Index{f}, IsArray{0}, MetaFlag{0}
 
+    //TypeHash = A3 72 64 68 34 BC AF 26 EA B1 D2 1B 29 E3 95 53
+    //  GameObject Base  [V(5) S(-1) Array(False) 0x00008000]
+    //    vector m_Component    [V(1) S(-1) Array(False) 0x00008041]
+    //        Array Array       [V(1) S(-1) Array(True) 0x00004041]
+    //        int size          [V(1) S(4) Array(False) 0x00000041]
+    //        ComponentPair data    [V(1) S(12) Array(False) 0x00000041]
+    //            PPtr<Component> component  [V(1) S(12) Array(False) 0x00000041]
+    //            int m_FileID               [V(1) S(4) Array(False) 0x00000041]
+    //            SInt64 m_PathID            [V(1) S(8) Array(False) 0x00000041]
+    //    unsigned int m_Layer  [V(1) S(4) Array(False) 0x00000000]
+    //    string m_Name         [V(1) S(-1) Array(False) 0x00008000]
+    //        Array Array       [V(1) S(-1) Array(True) 0x00004001]
+    //        int size          [V(1) S(4) Array(False) 0x00000001]
+    //        char data         [V(1) S(1) Array(False) 0x00000001]
+    //    UInt16 m_Tag      [V(1) S(2) Array(False) 0x00000000]
+    //    bool m_IsActive   [V(1) S(1) Array(False) 0x00000000]
+
     public class GameObject : EditorExtension
     {
         public GameObject(Type type, ObjectInfo objectInfo, string containerPath) : base(type, objectInfo, containerPath) { }

@@ -39,15 +39,15 @@ namespace GFAssetLib.Object
         {
             base.Read(reader);
 
-            this.script = reader.ReadString();
+            this.script = reader.ReadTypeString();
 
             if (type.GetTypeVersion() <= 1)
                 return;
 
-            this.pathName = reader.ReadString();
+            this.pathName = reader.ReadTypeString();
         }
 
-        public override string Extract(AssetReader reader, string path)
+        public override string ExtractContents(AssetReader reader, string path)
         {
             string fullPath = $"{path}{ContainerPath}";
             string directory = Path.GetDirectoryName(fullPath);

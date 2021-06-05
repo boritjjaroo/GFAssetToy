@@ -6,23 +6,15 @@ namespace GFAssetLib
 {
     public class TypeHelper
     {
-        public static void PrettyPrint(AssetReader reader, AssetPrettyWriter writer, TypeTreeNode[] nodes)
+        public static int PrettyPrint(AssetReader reader, AssetPrettyWriter writer, TypeTreeNode[] nodes, int startIndex, int lastIndex)
         {
-            if (nodes == null || nodes.Length < 0)
+            if (nodes == null || nodes.Length <= startIndex)
                 throw new Exception();
 
-            TypeHelper.PrettyPrintNode(reader, writer, nodes, 0);
-        }
+            int curIndex = startIndex;
+            int nextIndex = startIndex;
 
-        private static int PrettyPrintNode(AssetReader reader, AssetPrettyWriter writer, TypeTreeNode[] nodes, int index)
-        {
-            if (nodes == null || nodes.Length <= index)
-                throw new Exception();
-
-            int curIndex = index;
-            int nextIndex = index;
-
-            while (curIndex < nodes.Length)
+            while (curIndex < lastIndex)
             {
                 TypeTreeNode curNode = nodes[curIndex];
                 var typeName = curNode.GetTypeName();
@@ -33,12 +25,15 @@ namespace GFAssetLib
                 {
                     int size = reader.ReadInt32();
 
+                    var buf = $"{typeName} {fieldName}[{size}]";
+                    writer.WriteLine(buf);
+
                     if (0 < size)
                     {
                         for (int i = 0; i < size; i++)
                         {
                             writer.WriteLine($"[{i}]");
-                            nextIndex = curIndex + 2 + PrettyPrintNode(reader, writer, nodes, curIndex + 2);
+                            nextIndex = curIndex + 2 + PrettyPrint(reader, writer, nodes, curIndex + 2, lastIndex);
                         }
                     }
                     else
@@ -50,7 +45,7 @@ namespace GFAssetLib
                 }
                 else if (typeName == "string")
                 {
-                    val = $" = \"{reader.ReadString()}\"";
+                    val = $" = \"{reader.ReadTypeString()}\"";
                     nextIndex = curIndex + 4;
                 }
                 else if (typeName == "bool")
@@ -66,6 +61,11 @@ namespace GFAssetLib
                 else if (typeName == "SInt64")
                 {
                     val = $" = {reader.ReadInt64()}";
+                    nextIndex = curIndex + 1;
+                }
+                else if (typeName == "unsigned int")
+                {
+                    val = $" = {reader.ReadUInt32()}";
                     nextIndex = curIndex + 1;
                 }
                 else if (typeName == "UInt8")
@@ -84,8 +84,11 @@ namespace GFAssetLib
                     nextIndex = curIndex + 1;
                 }
 
-                var buf = $"{typeName} {fieldName}{val}";
-                writer.WriteLine(buf);
+                if (typeName != "Array")
+                {
+                    var buf = $"{typeName} {fieldName}{val}";
+                    writer.WriteLine(buf);
+                }
 
                 if (curNode.IsAligned())
                     reader.MoveToAlignedPosition(4);
@@ -96,7 +99,7 @@ namespace GFAssetLib
                 if (curNode.Depth < nodes[nextIndex].Depth)
                 {
                     writer.IncreaseDepth();
-                    nextIndex += TypeHelper.PrettyPrintNode(reader, writer, nodes, nextIndex);
+                    nextIndex += TypeHelper.PrettyPrint(reader, writer, nodes, nextIndex, lastIndex);
                     writer.DecreaseDepth();
                 }
 
@@ -111,7 +114,8 @@ namespace GFAssetLib
                 curIndex = nextIndex;
             }
 
-            return nextIndex - index;
+            return nextIndex - startIndex;
         }
+
     }
 }

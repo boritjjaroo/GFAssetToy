@@ -48,30 +48,14 @@ namespace GFAssetLib.Object
             // Hash128 m_PropertiesHash[V(1) S(16) Array(False) 0x00000010]
             reader.ReadBytes(16);
             // string m_ClassName[V(1) S(-1) Array(False) 0x00008010]
-            reader.ReadString();
+            reader.ReadTypeString();
             // string m_Namespace[V(1) S(-1) Array(False) 0x00008010]
-            reader.ReadString();
+            reader.ReadTypeString();
             // string m_AssemblyName[V(1) S(-1) Array(False) 0x00008010]
-            reader.ReadString();
+            reader.ReadTypeString();
             // bool m_IsEditorScript[V(1) S(1) Array(False) 0x00000001]
             reader.ReadBoolean();
         }
 
-        public override string Extract(AssetReader reader, string path)
-        {
-            var fullPath = $"{path}{ContainerPath}";
-            var directory = Path.GetDirectoryName(fullPath);
-
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-
-            var fs = File.Open(fullPath, FileMode.Create);
-            var writer = new AssetPrettyWriter(fs, 4);
-
-            TypeHelper.PrettyPrint(reader, writer, type.TypeTree.GetNodes());
-
-            writer.Close();
-            return fs.Name;
-        }
     }
 }

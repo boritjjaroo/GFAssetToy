@@ -1,10 +1,13 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 
 namespace GFAssetLib.Object
 {
     public abstract class ObjectBase
     {
         protected Type type;
+        public Type Type { get => type; }
         protected ObjectInfo objectInfo;
         public long DataOffset { get => objectInfo.DataOffset; }
         private string containerPath;
@@ -32,9 +35,7 @@ namespace GFAssetLib.Object
                         return new MeshRenderer(type, objectInfo, containerPath);
                     break;
                 case 28:
-                    if (typeVersion == 2)
-                        return new Texture2D(type, objectInfo, containerPath);
-                    break;
+                    return Texture2D.Create(type, objectInfo, containerPath);
                 case 33:
                     if (typeVersion == 1)
                         return new MeshFilter(type, objectInfo, containerPath);
@@ -52,9 +53,7 @@ namespace GFAssetLib.Object
                         return new Animator(type, objectInfo, containerPath);
                     break;
                 case 114:
-                    if (typeVersion == 1)
-                        return new MonoBehaviour(type, objectInfo, containerPath);
-                    break;
+                    return MonoBehaviour.Create(type, objectInfo, containerPath);
                 case 115:
                     if (typeVersion == 4)
                         return new MonoScript(type, objectInfo, containerPath);
@@ -81,12 +80,55 @@ namespace GFAssetLib.Object
 
         public virtual void Read(AssetReader reader) {}
 
-        public virtual string Extract(AssetReader reader, string path) { return null; }
+        public virtual string ExtractContents(AssetReader reader, string path) { return "Not Implemented."; }
+
+        public virtual string Extract(AssetReader reader, string path)
+        {
+            var savePath = ContainerPath;
+            //if (ContainerPath == null || ContainerPath.Length == 0)
+            //    throw new Exception("Invalid path name.");
+            if (savePath == null || savePath.Length == 0)
+            {
+                savePath = GetName();
+            }
+            if (savePath == null || savePath.Length == 0)
+            {
+                savePath = GetTypeName();
+            }
+
+            var fullPath = $"{path}{savePath}";
+            var directory = Path.GetDirectoryName(fullPath);
+
+            if (!Directory.Exists(directory))
+                Directory.CreateDirectory(directory);
+
+            var fs = File.Open(fullPath, FileMode.Create);
+            var writer = new AssetPrettyWriter(fs, 4);
+
+            TypeTreeNode[] nodes = type.TypeTree.GetNodes();
+            TypeHelper.PrettyPrint(reader, writer, nodes, 0, nodes.Length);
+
+            writer.Close();
+            return fs.Name;
+        }
+
+        public virtual string Extract(AssetReader reader)
+        {
+            var memStream = new MemoryStream();
+            var writer = new AssetPrettyWriter(memStream, 4);
+
+            TypeTreeNode[] nodes = type.TypeTree.GetNodes();
+            TypeHelper.PrettyPrint(reader, writer, nodes, 0, nodes.Length);
+
+            writer.Close();
+            return Encoding.UTF8.GetString(memStream.ToArray());
+        }
 
         public virtual string GetName() { return null; }
 
         public virtual string GetTypeName() { return "Object"; }
 
         public virtual int GetContentsSize() { return 0; }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GFAssetLib.DataType;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -197,17 +198,44 @@ namespace GFAssetLib
             throw new Exception("Invalid File Format");
         }
 
-        // string [V(1) S(-1) Array(False) 0x00008000]
-        //   Array Array [V(1) S(-1) Array(True) 0x00004001]
-        //     int size [V(1) S(4) Array(False) 0x00000001]
-        //     char data [V(1) S(1) Array(False) 0x00000001]
-        public string ReadString()
+        //   bool <field-name>   [V(1) S(1) Array(False) 0x00004000]
+        public bool ReadTypeBool()
+        {
+            var val = ReadByte();
+            MoveToAlignedPosition(4);
+            return 0 < val;
+        }
+
+        // UInt8 <field-name>  [V(1) S(1) Array(False) 0x00004101]
+        public UInt16 ReadTypeUInt8()
+        {
+            var val = ReadByte();
+            MoveToAlignedPosition(4);
+            return val;
+        }
+
+        // string         [V(1) S(-1) Array(False) 0x00008000]
+        //   Array Array  [V(1) S(-1) Array(True)  0x00004001]
+        //     int size   [V(1) S( 4) Array(False) 0x00000001]
+        //     char data  [V(1) S( 1) Array(False) 0x00000001]
+        public string ReadTypeString()
         {
             int size = ReadInt32();
             byte[] buf = ReadBytes(size);
             string result = Encoding.UTF8.GetString(buf);
             MoveToAlignedPosition(4);
             return result;
+        }
+
+        //PPtr<T> <field-name>  [V(1) S(12) Array(False) 0x00000041]
+        //  int m_FileID        [V(1) S( 4) Array(False) 0x00000041]
+        //  SInt64 m_PathID     [V(1) S( 8) Array(False) 0x00000041]
+        public PPtr ReadTypePPtr()
+        {
+            var pptr = new PPtr();
+            pptr.fileID = ReadInt32();
+            pptr.pathID = ReadInt64();
+            return pptr;
         }
 
         public void Close()

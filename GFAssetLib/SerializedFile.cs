@@ -76,6 +76,22 @@ namespace GFAssetLib
             return objects[index];
         }
 
+        public string ExtractObjectContents(int index, string path = null)
+        {
+            ObjectBase obj = ReadObject(index);
+            if (obj == null)
+                return null;
+
+            if (path == null)
+            {
+                path = $"{Path.GetDirectoryName(bundlePath)}\\";
+            }
+            reader.Position = header.ObjectDataOffset;
+            reader.Position += obj.DataOffset;
+            reader.SetAlignBasePosition();
+            return obj.ExtractContents(reader, path);
+        }
+
         public string ExtractObject(int index, string path = null)
         {
             ObjectBase obj = ReadObject(index);
@@ -90,6 +106,18 @@ namespace GFAssetLib
             reader.Position += obj.DataOffset;
             reader.SetAlignBasePosition();
             return obj.Extract(reader, path);
+        }
+
+        public string ExtractObjectToString(int index)
+        {
+            ObjectBase obj = ReadObject(index);
+            if (obj == null)
+                return null;
+
+            reader.Position = header.ObjectDataOffset;
+            reader.Position += obj.DataOffset;
+            reader.SetAlignBasePosition();
+            return obj.Extract(reader);
         }
 
         public void PrettyPrint(AssetPrettyWriter writer)

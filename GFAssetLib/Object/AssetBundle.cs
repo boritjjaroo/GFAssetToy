@@ -175,7 +175,7 @@ namespace GFAssetLib.Object
                 //          Array Array[V(1) S(-1) Array(True) 0x00004001]
                 //            int size[V(1) S(4) Array(False) 0x00000001]
                 //            char data[V(1) S(1) Array(False) 0x00000001]
-                string key = reader.ReadString();
+                string key = reader.ReadTypeString();
                 //        AssetInfo second[V(1) S(20) Array(False) 0x00000000]
                 //          int preloadIndex[V(1) S(4) Array(False) 0x00000000]
                 reader.ReadInt32();
@@ -206,7 +206,7 @@ namespace GFAssetLib.Object
             //    Array Array[V(1) S(-1) Array(True) 0x00004001]
             //      int size[V(1) S(4) Array(False) 0x00000001]
             //      char data[V(1) S(1) Array(False) 0x00000001]
-            assetBundleName = reader.ReadString();
+            assetBundleName = reader.ReadTypeString();
             //  vector m_Dependencies[V(1) S(-1) Array(False) 0x00008000]
             //    Array Array[V(1) S(-1) Array(True) 0x0000C000]
             //      int size[V(1) S(4) Array(False) 0x00000000]

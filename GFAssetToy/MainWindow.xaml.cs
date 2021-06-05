@@ -58,6 +58,7 @@ namespace GFAssetToy
             objects = new ObservableCollection<AssetObject>();
             listViewObjects.ItemsSource = objects;
             CollectionView viewObjects = (CollectionView)CollectionViewSource.GetDefaultView(listViewObjects.ItemsSource);
+            viewObjects.SortDescriptions.Add(new System.ComponentModel.SortDescription("path", System.ComponentModel.ListSortDirection.Descending));
             viewObjects.SortDescriptions.Add(new System.ComponentModel.SortDescription("type", System.ComponentModel.ListSortDirection.Ascending));
             viewObjects.SortDescriptions.Add(new System.ComponentModel.SortDescription("name", System.ComponentModel.ListSortDirection.Ascending));
         }
@@ -77,9 +78,9 @@ namespace GFAssetToy
             assetBundle = new GFAssetLib.AssetBundle();
             try
             {
-                this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\AndroidResConfigData.txt");
+                //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\AndroidResConfigData.txt");
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\assettexttable.ab");
-                //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgungeneralliu5101.ab");
+                this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgungeneralliu5101.ab");
                 //this.assetBundle.LoadAssetBundle(@"C:\Users\lesiles\source\repos\GFAssetToy\Test\live2dnewgunkp311103.ab");
                 AssetPrettyWriter writer = new AssetPrettyWriter(2);
                 assetBundle.PrettyPrint(writer);
@@ -111,12 +112,6 @@ namespace GFAssetToy
 
         private void OnListViewObjectsDoubleClick(object sender, RoutedEventArgs eventArgs)
         {
-            if (listViewObjects.SelectedIndex < 0)
-                return;
-
-            AssetObject item = (AssetObject)listViewObjects.SelectedItem;
-            string path = currentSerializedFile.ExtractObject(item.index);
-            MessageBox.Show($"{path} 저장되었습니다.");
         }
 
         private void OpenAssetEntry(int index)
@@ -139,6 +134,38 @@ namespace GFAssetToy
                         path = obj.ContainerPath 
                     });
             }
+        }
+
+        private void OnButtonShowType(object sender, RoutedEventArgs eventArgs)
+        {
+            if (listViewObjects.SelectedIndex < 0)
+                return;
+
+            AssetObject item = (AssetObject)listViewObjects.SelectedItem;
+            var obj = currentSerializedFile.ReadObject(item.index);
+            var writer = new AssetPrettyWriter(2);
+            obj.Type.PrettyPrint(writer);
+            logger.Debug(writer.GetString());
+        }
+
+        private void OnButtonExtractContents(object sender, RoutedEventArgs eventArgs)
+        {
+            if (listViewObjects.SelectedIndex < 0)
+                return;
+
+            AssetObject item = (AssetObject)listViewObjects.SelectedItem;
+            string path = currentSerializedFile.ExtractObjectContents(item.index);
+            MessageBox.Show($"{path} 저장되었습니다.");
+        }
+
+        private void OnButtonShowObjectData(object sender, RoutedEventArgs eventArgs)
+        {
+            if (listViewObjects.SelectedIndex < 0)
+                return;
+
+            AssetObject item = (AssetObject)listViewObjects.SelectedItem;
+            string buf = currentSerializedFile.ExtractObjectToString(item.index);
+            logger.Debug(buf);
         }
 
         private void OnButtonTestClick(object sender, RoutedEventArgs eventArgs)
